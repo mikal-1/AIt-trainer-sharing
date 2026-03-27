@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trainer Feedback — Sports Performance Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal-dark:   #063D2F;
+    --teal-mid:    #0F6E56;
+    --teal:        #1D9E75;
+    --teal-light:  #9FE1CB;
+    --teal-pale:   #E1F5EE;
+    --cream:       #F7FAF4;
+    --white:       #FFFFFF;
+    --body:        #1A2E29;
+    --muted:       #6B7C75;
+    --green-bg:    #D4EDDA; --green-txt: #0A4F2A;
+    --amber-bg:    #FFF3CD; --amber-txt: #7D4E00;
+    --red-bg:      #FDECEA; --red-txt:   #8B1A1A;
+    --gray-bg:     #F1F0EC; --gray-txt:  #555;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--teal-dark);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem; height: 56px;
+    box-shadow: 0 2px 20px rgba(6,61,47,0.3);
+  }
+  .nav-logo {
+    font-family: 'DM Sans', sans-serif; font-weight: 600;
+    font-size: 0.85rem; color: var(--teal-light); letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .nav-back {
+    display: none; align-items: center; gap: 0.5rem;
+    background: none; border: none; cursor: pointer;
+    color: var(--teal-light); font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem; font-weight: 500; letter-spacing: 0.04em;
+    transition: color 0.2s;
+  }
+  .nav-back:hover { color: var(--white); }
+  .nav-back svg { width: 16px; height: 16px; }
+  .nav-back.visible { display: flex; }
+
+  /* ── PAGES ── */
+  .page { display: none; padding-top: 56px; min-height: 100vh; }
+  .page.active { display: block; }
+
+  /* ── HOME ── */
+  .home-hero {
+    background: var(--teal-dark);
+    padding: 4rem 2rem 3rem;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .home-hero::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 20% 50%, rgba(29,158,117,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(29,158,117,0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .home-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 700;
+    color: var(--white); line-height: 1.15; margin-bottom: 0.75rem;
+    position: relative;
+  }
+  .home-hero h1 span { color: var(--teal-light); }
+  .home-hero p {
+    color: rgba(159,225,203,0.8); font-size: 0.95rem; font-weight: 300;
+    letter-spacing: 0.02em; position: relative;
+  }
+
+  .trainers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem; padding: 2.5rem 2rem;
+    max-width: 1000px; margin: 0 auto;
+  }
+
+  .trainer-card {
+    background: var(--white);
+    border-radius: 16px;
+    border: 1px solid rgba(29,158,117,0.15);
+    padding: 1.75rem;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .trainer-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--teal), var(--teal-light));
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .trainer-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(6,61,47,0.12); border-color: var(--teal); }
+  .trainer-card:hover::before { transform: scaleX(1); }
+
+  .card-avatar {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--teal-pale);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif; font-size: 1.3rem;
+    color: var(--teal-mid); font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  .card-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem; font-weight: 700; color: var(--teal-dark);
+    margin-bottom: 0.25rem;
+  }
+  .card-role {
+    font-size: 0.8rem; color: var(--muted); font-weight: 400;
+    letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 1.25rem;
+  }
+
+
+  .card-arrow {
+    position: absolute; bottom: 1.5rem; right: 1.5rem;
+    color: var(--teal-light); transition: color 0.2s, transform 0.2s;
+  }
+  .trainer-card:hover .card-arrow { color: var(--teal); transform: translateX(4px); }
+
+  /* ── DETAIL PAGE ── */
+  .detail-hero {
+    background: var(--teal-dark);
+    padding: 2.5rem 2rem 2rem;
+    position: relative; overflow: hidden;
+  }
+  .detail-hero::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 10% 80%, rgba(29,158,117,0.2) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .detail-hero-inner {
+    max-width: 760px; margin: 0 auto;
+    display: flex; align-items: flex-start; gap: 1.5rem;
+    position: relative;
+  }
+  .detail-avatar {
+    width: 64px; height: 64px; border-radius: 50%; flex-shrink: 0;
+    background: rgba(29,158,117,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem; color: var(--teal-light); font-weight: 700;
+    border: 2px solid rgba(159,225,203,0.3);
+  }
+  .detail-hero-text h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.9rem; font-weight: 700; color: var(--white);
+    line-height: 1.2; margin-bottom: 0.3rem;
+  }
+  .detail-hero-text p {
+    font-size: 0.85rem; color: var(--teal-light); font-weight: 300;
+    letter-spacing: 0.05em; text-transform: uppercase;
+  }
+
+  .detail-body { max-width: 760px; margin: 0 auto; padding: 2rem; }
+
+  .section-label {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--teal);
+    margin-bottom: 0.75rem; margin-top: 2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--teal-pale);
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .section-label::before {
+    content: ''; display: inline-block; width: 18px; height: 2px;
+    background: var(--teal);
+  }
+
+  .obs-card {
+    background: var(--white);
+    border: 1px solid rgba(29,158,117,0.12);
+    border-radius: 12px; padding: 1.25rem 1.4rem;
+    margin-bottom: 0.9rem;
+    border-left: 3px solid transparent;
+    transition: border-left-color 0.2s;
+  }
+  .obs-card.green-border  { border-left-color: var(--teal); }
+  .obs-card.amber-border  { border-left-color: #D97706; }
+  .obs-card.red-border    { border-left-color: #B91C1C; }
+  .obs-card.gray-border   { border-left-color: #ccc; }
+
+  .obs-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 0.6rem; }
+  .obs-title { font-size: 0.88rem; font-weight: 600; color: var(--teal-mid); }
+  .obs-badge {
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em;
+    padding: 3px 9px; border-radius: 20px; white-space: nowrap; flex-shrink: 0;
+    text-transform: uppercase;
+  }
+  .obs-badge.green  { background: var(--green-bg); color: var(--green-txt); }
+  .obs-badge.amber  { background: var(--amber-bg); color: var(--amber-txt); }
+  .obs-badge.red    { background: var(--red-bg);   color: var(--red-txt); }
+  .obs-badge.gray   { background: var(--gray-bg);  color: var(--gray-txt); }
+
+  .obs-text { font-size: 0.88rem; color: #3d5048; line-height: 1.65; font-weight: 300; }
+  .obs-quote {
+    margin-top: 0.6rem; padding: 0.5rem 0.8rem;
+    background: var(--teal-pale); border-radius: 6px;
+    font-size: 0.82rem; color: var(--teal-mid); font-style: italic; line-height: 1.5;
+  }
+  .obs-quote::before { content: '"'; font-size: 1rem; font-style: normal; margin-right: 2px; }
+  .obs-quote::after  { content: '"'; font-size: 1rem; font-style: normal; margin-left: 2px; }
+
+  .summary-box {
+    background: var(--teal-dark); border-radius: 14px;
+    padding: 1.5rem 1.75rem; margin-bottom: 1.5rem;
+    display: flex; gap: 1.25rem; align-items: flex-start;
+  }
+  .summary-icon {
+    width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+    background: rgba(29,158,117,0.3);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .summary-icon svg { color: var(--teal-light); }
+  .summary-text p:first-child {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--teal-light); margin-bottom: 0.3rem;
+  }
+  .summary-text p:last-child {
+    font-size: 0.9rem; color: rgba(255,255,255,0.85); line-height: 1.6; font-weight: 300;
+  }
+
+  .score-row {
+    display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 2rem;
+    padding: 1.25rem 1.4rem;
+    background: var(--white); border-radius: 12px;
+    border: 1px solid rgba(29,158,117,0.12);
+  }
+  .score-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--muted); }
+  .score-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  footer {
+    text-align: center; padding: 2rem;
+    font-size: 0.75rem; color: var(--muted); font-weight: 300;
+    border-top: 1px solid rgba(29,158,117,0.1);
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 500px) {
+    .trainers-grid { grid-template-columns: 1fr; padding: 1.5rem 1rem; }
+    .detail-body { padding: 1.25rem 1rem; }
+    .home-hero { padding: 3rem 1.25rem 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">Sports Performance Hub</span>
+  <button class="nav-back" id="navBack" onclick="showHome()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 12H5M12 5l-7 7 7 7"/>
+    </svg>
+    All Trainers
+  </button>
+</nav>
+
+<!-- HOME PAGE -->
+<div class="page active" id="homePage">
+  <div class="home-hero">
+    <h1>Trainer <span>Feedback</span><br>Overview</h1>
+    <p>Sports Psychology Observation Report &nbsp;·&nbsp; Internal Team Sharing</p>
+  </div>
+  <div class="trainers-grid" id="trainersGrid"></div>
+  <footer>Sports Performance Hub &nbsp;·&nbsp; Psychological Climate Review &nbsp;·&nbsp; Confidential</footer>
+</div>
+
+<!-- DETAIL PAGE -->
+<div class="page" id="detailPage">
+  <div class="detail-hero">
+    <div class="detail-hero-inner">
+      <div class="detail-avatar" id="detailAvatar"></div>
+      <div class="detail-hero-text">
+        <h2 id="detailName"></h2>
+        <p>Trainer &nbsp;·&nbsp; Sports Performance Hub</p>
+      </div>
+    </div>
+  </div>
+  <div class="detail-body" id="detailBody"></div>
+</div>
+
+<script>
+const TRAINERS = [
+  {
+    id: "yuheng",
+    name: "Yu Heng",
+    initial: "YH",
+    summary: "Yu Heng shows strong initiative in directly addressing avoidance motivation — a genuine standout moment. Key growth areas are around responding to athletes' negative self-talk, shifting toward more process-focused praise, and reading disengagement cues in sessions.",
+    tags: [
+      { label: "Proactive why", type: "green" },
+      { label: "Approach motivation", type: "green" },
+      { label: "Outcome praise", type: "red" },
+      { label: "Body language", type: "red" },
+    ],
+    sections: [
+      {
+        label: "Communication & Coaching Style",
+        items: [
+          { title: "Tone of voice", badge: "note", border: "amber-border", text: "Sessions lean commanding (40%) and neutral (50%), with limited encouraging moments (~10%). There is room to introduce more positive, reinforcing language — especially with youth athletes. Research shows that an encouraging tone promotes greater effort, resilience, and enjoyment in sport, particularly during the developmental years.", quote: null },
+          { title: "Handling negativity", badge: "gap", border: "red-border", text: "When Elliot said \"I'm not as fast as him\", the comment was not addressed or reframed. This is a missed opportunity — negative self-comparisons in youth athletes can quietly erode confidence over time.", quote: null },
+          { title: "Instruction delivery", badge: "note", border: "amber-border", text: "Multiple instructions are given at once. Athletes mostly retain them, but this approach may not suit all youth clients given differences in cognitive load capacity. Delivering one instruction at a time reduces cognitive overload and gives athletes a clearer focus for each movement.", quote: null },
+        ]
+      },
+      {
+        label: "Motivation & Autonomy",
+        items: [
+          { title: "Client choice", badge: "good", border: "green-border", text: "Athletes are given a degree of choice in their sessions — a positive that supports intrinsic motivation. Self-Determination Theory tells us that even small choices foster a sense of autonomy, which is one of the core drivers of long-term engagement in sport.", quote: null },
+          { title: "Explaining the why", badge: "good", border: "green-border", text: "Yu Heng proactively explains the purpose behind exercises — one of only two trainers observed doing this consistently. This builds athlete buy-in and trust.", quote: null },
+          { title: "Training to avoid failure vs. training to achieve — is it spotted?", badge: "good", border: "green-border", text: "When Reuel gave up mid-drill during walking lunges, Yu Heng directly asked him why — excellent practice. Addressing avoidance motivation head-on is something many trainers miss.", quote: null },
+        ]
+      },
+      {
+        label: "Pressure & Performance States",
+        items: [
+          { title: "Regulating client emotions before a set", badge: "no data", border: "gray-border", text: "This wasn't a situation that came up during these sessions. That said, acknowledging an athlete's emotional or nervous state before hard effort sets is something that can significantly affect both performance and willingness to push through.", quote: null },
+          { title: "Reading body language", badge: "gap", border: "red-border", text: "Multiple instances observed where clients were disengaged or not paying attention, but this was not addressed. Noticing and gently redirecting disengagement — as some other trainers do — can make a meaningful difference.", quote: null },
+          { title: "Psychological safety", badge: "good", border: "green-border", text: "From what was observed, the gym carries a generally comfortable atmosphere — athletes appeared at ease during sessions and showed no signs of holding back or withdrawing out of fear of judgement.", quote: null },
+        ]
+      },
+      {
+        label: "Youth-Specific Dynamics",
+        items: [
+          { title: "Handling frustration", badge: "no data", border: "gray-border", text: "This didn't come up during these sessions. Frustration is one of the most common emotional states in youth athletes — when it surfaces, acknowledging it early can prevent it from spiralling into disengagement or avoidance.", quote: null },
+          { title: "Praise style", badge: "gap", border: "red-border", text: "Praise observed tends to be outcome-focused rather than effort or process-focused. Research consistently shows that process praise builds more resilient, intrinsically motivated youth athletes over time.", quote: null },        ]
+      }
+    ]
+  },
+  {
+    id: "dexter",
+    name: "Dexter",
+    initial: "D",
+    summary: "Dexter is the team's standout performer across all four observation categories. He demonstrates consistently strong psychological practice — from active reframing and body language awareness to process praise and emotional attunement. A genuine internal model for the team.",
+    tags: [
+      { label: "Encouraging tone", type: "green" },
+      { label: "Reframes negativity", type: "green" },
+      { label: "Reads body language", type: "green" },
+      { label: "Process praise", type: "green" },
+    ],
+    sections: [
+      {
+        label: "Communication & Coaching Style",
+        items: [
+          { title: "Tone of voice", badge: "good", border: "green-border", text: "Mostly encouraging (~70%), with a warm, motivating style that athletes respond well to. Uses specific, genuine praise rather than generic affirmations. Specific praise is more effective than generic praise because it gives athletes a clear sense of what behaviours are worth repeating.", quote: "I'm very happy with the quality of effort you're giving me." },
+          { title: "Handling negativity", badge: "good", border: "green-border", text: "Consistently reframes negative self-talk into actionable goals. Two strong examples: turning Debbie's \"I feel like I can only do 80%\" into a challenge to reach 100%, and reframing a client's perceived weakness into a focused training goal. Reframing negative self-talk into forward-looking goals shifts an athlete's internal narrative from fixed limitations to growth possibilities.", quote: "Okay since you feel like you're lacking here, let's focus on some steps to get it up to par." },
+          { title: "Instruction delivery", badge: "good", border: "green-border", text: "One instruction at a time — athletes retain well. This aligns with best practice for youth athletes: reducing cognitive load allows athletes to focus on executing the movement rather than remembering a list of cues.", quote: null },
+        ]
+      },
+      {
+        label: "Motivation & Autonomy",
+        items: [
+          { title: "Client choice", badge: "good", border: "green-border", text: "Athletes are given choice during sessions, supporting ownership and intrinsic motivation. When athletes feel a sense of control over their training, they are more likely to stay engaged and push through difficulty.", quote: null },
+          { title: "Explaining the why", badge: "good", border: "green-border", text: "Proactively explains the purpose behind exercises — one of only two trainers observed doing this consistently. Builds buy-in and trust.", quote: null },
+          { title: "Training to avoid failure vs. training to achieve — is it spotted?", badge: "no data", border: "gray-border", text: "This didn't come up during these sessions. Avoidance-motivated athletes often disengage quietly rather than showing obvious signs of struggle — it can be easy to miss without actively looking for it.", quote: null },
+        ]
+      },
+      {
+        label: "Pressure & Performance States",
+        items: [
+          { title: "Regulating client emotions before a set", badge: "no data", border: "gray-border", text: "This didn't arise during these sessions. Pre-set emotional regulation is an important skill — helping athletes settle before hard effort sets can meaningfully improve both performance quality and their confidence in tackling difficult tasks.", quote: null },
+          { title: "Reading body language", badge: "good", border: "green-border", text: "Exemplary — noticed Debbie's discomfort mid-exercise and stopped to adjust the session. This kind of real-time attunement is a mark of strong psychological awareness in a trainer.", quote: null },
+          { title: "Psychological safety", badge: "good", border: "green-border", text: "Environment feels safe. Notable spotlight: when Kimberly said she was scared to check her weight, Dexter (alongside Keith) reassured her and allowed her to push the weighing to next week — prioritising emotional readiness over routine.", quote: null },
+        ]
+      },
+      {
+        label: "Youth-Specific Dynamics",
+        items: [
+          { title: "Handling frustration", badge: "good", border: "green-border", text: "When Debbie became frustrated, Dexter addressed the emotion directly and redesigned the workout around it — the strongest example of emotional attunement observed across all trainers. Addressing the emotion first — before trying to fix the exercise — helps athletes feel seen and prevents frustration from escalating into full disengagement.", quote: null },
+          { title: "Praise style", badge: "good", border: "green-border", text: "Effort and process-focused — the gold standard for youth athletes. Builds resilience, intrinsic motivation, and a growth mindset over time.", quote: null },        ]
+      }
+    ]
+  },
+  {
+    id: "megan",
+    name: "Megan",
+    initial: "Me",
+    summary: "Megan shows good instincts for reframing and gives athletes space to self-regulate — her \"you can go when you're ready\" moment is a strong example of athlete-led pacing. The main growth area is proactively explaining the why behind exercises and tuning into subtle anxiety cues.",
+    tags: [
+      { label: "Reframes negativity", type: "green" },
+      { label: "Athlete pacing", type: "green" },
+      { label: "Explain the why", type: "amber" },
+      { label: "Anxiety cues", type: "red" },
+    ],
+    sections: [
+      {
+        label: "Communication & Coaching Style",
+        items: [
+          { title: "Tone of voice", badge: "note", border: "amber-border", text: "Predominantly neutral (~70%), with some commanding and some encouraging moments. There is room to introduce more intentional warmth, particularly with youth clients who may respond better to an encouraging tone. An encouraging tone has been shown to positively impact athletes' enjoyment, effort, and willingness to try again after setbacks.", quote: null },
+          { title: "Handling negativity", badge: "good", border: "green-border", text: "Good instincts. When Rhea said \"I don't think I can do it\", Megan challenged her with a clear rationale. When Rhea expressed fear about back kneading, Megan adapted and offered an alternative — a good balance of challenge and sensitivity. Knowing when to push through resistance and when to offer an alternative is an important skill — it keeps athletes engaged without overriding their sense of safety.", quote: "That's why we have to do this, so that we can strengthen your back so there won't be pain.", quote2: "Okay, let's try some other way to release your back then." },
+          { title: "Instruction delivery", badge: "good", border: "green-border", text: "One instruction at a time — athletes retain well. Delivering instructions in single steps reduces cognitive load and helps athletes stay focused on execution, which is particularly important during complex or unfamiliar exercises.", quote: null },
+        ]
+      },
+      {
+        label: "Motivation & Autonomy",
+        items: [
+          { title: "Client choice", badge: "good", border: "green-border", text: "Athletes are given choice during sessions. Offering choices — even small ones — gives athletes a sense of ownership over their training, which supports sustained motivation and engagement.", quote: null },
+          { title: "Explaining the why", badge: "note", border: "amber-border", text: "Only explains the purpose behind exercises when prompted by the client. Proactively explaining the why can significantly increase athlete engagement and buy-in, especially with youth.", quote: null },
+          { title: "Training to avoid failure vs. training to achieve — is it spotted?", badge: "no data", border: "gray-border", text: "This didn't come up during these sessions. Avoidance motivation can show up subtly — such as a client choosing the lightest weights or giving up just before the hardest part of a set. Keeping an eye out for these patterns can open up useful conversations with clients.", quote: null },
+        ]
+      },
+      {
+        label: "Pressure & Performance States",
+        items: [
+          { title: "Regulating client emotions before a set", badge: "good", border: "green-border", text: "Gave Greg extra time before a set — \"you can go when you're ready.\" Giving a client the space to self-regulate before a set — rather than pushing them to go on the trainer's timeline — reduces performance anxiety and builds a sense of control.", quote: "You can go when you're ready." },
+          { title: "Reading body language", badge: "gap", border: "red-border", text: "Rhea was observed fidgeting anxiously with her fingers during the session — this non-verbal cue went unnoticed. Tuning into subtle anxiety signals can open the door to a quick check-in that makes a real difference.", quote: null },
+          { title: "Psychological safety", badge: "good", border: "green-border", text: "Based on observation, athletes in the gym appear to feel at ease — there was no sense of athletes shying away from attempts or masking discomfort out of embarrassment. The space feels welcoming overall.", quote: null },
+        ]
+      },
+      {
+        label: "Youth-Specific Dynamics",
+        items: [
+          { title: "Handling frustration", badge: "no data", border: "gray-border", text: "This didn't come up during these sessions. When frustration does surface, acknowledging it in the moment — even briefly — can prevent it from affecting the rest of the session.", quote: null },
+          { title: "Praise style", badge: "good", border: "green-border", text: "Effort and process-focused — the right approach for youth athletes. This type of praise reinforces the behaviours that lead to long-term growth, rather than tying self-worth to outcomes.", quote: null },        ]
+      }
+    ]
+  },
+  {
+    id: "ming",
+    name: "Ming",
+    initial: "Mi",
+    summary: "Ming creates a balanced, generally safe environment and uses effort-focused praise well. The clearest growth areas are around verbal responses to athlete self-doubt and tuning into anxiety cues before high-effort sets — both of which showed up during observations.",
+    tags: [
+      { label: "Client choice", type: "green" },
+      { label: "Process praise", type: "green" },
+      { label: "Verbal responses", type: "red" },
+      { label: "Anxiety cues", type: "red" },
+    ],
+    sections: [
+      {
+        label: "Communication & Coaching Style",
+        items: [
+          { title: "Tone of voice", badge: "note", border: "amber-border", text: "Balanced — encouraging (40%) and neutral (50%), with minimal commanding. There is good potential here to lean more into the encouraging side, particularly with youth athletes. A more consistently encouraging tone can strengthen the trainer-athlete relationship and make athletes more receptive to corrections.", quote: null },
+          { title: "Handling negativity", badge: "gap", border: "red-border", text: "When Andrew said \"Gosh my balance is really bad\", Ming smiled but offered no verbal response. Smiling without engaging leaves the negative self-talk unaddressed — a small but meaningful miss that can accumulate over time.", quote: null },
+          { title: "Instruction delivery", badge: "good", border: "green-border", text: "One instruction at a time — athletes retain well. Delivering instructions in single steps reduces cognitive load and helps athletes stay focused on execution, which is particularly important during complex or unfamiliar exercises.", quote: null },
+        ]
+      },
+      {
+        label: "Motivation & Autonomy",
+        items: [
+          { title: "Client choice", badge: "good", border: "green-border", text: "Clients are given choice during sessions — a genuine positive. Offering choice supports autonomy, one of the key psychological needs linked to sustained motivation in sport.", quote: null },
+          { title: "Explaining the why", badge: "note", border: "amber-border", text: "Only explains purpose behind exercises when prompted. Proactively building in the rationale for exercises can significantly improve youth athlete engagement.", quote: null },
+          { title: "Training to avoid failure vs. training to achieve — is it spotted?", badge: "no data", border: "gray-border", text: "This didn't come up during these sessions. Identifying avoidance motivation early — before it becomes a fixed pattern — creates an opportunity to reframe challenges in a way that builds confidence rather than reinforcing fear of failure.", quote: null },
+        ]
+      },
+      {
+        label: "Pressure & Performance States",
+        items: [
+          { title: "Regulating client emotions before a set", badge: "gap", border: "red-border", text: "Andrew appeared visibly anxious before a set, but this was not acknowledged or addressed. A brief check-in or word of grounding in these moments can make a significant difference.", quote: null },
+          { title: "Reading body language", badge: "no data", border: "gray-border", text: "Beyond the pre-set anxiety moment noted above, this didn't come up clearly during these sessions. Body language — such as slumped posture, avoidant eye contact, or tense movement — often signals how a client is feeling before they verbalise it.", quote: null },
+          { title: "Psychological safety", badge: "good", border: "green-border", text: "The gym environment, as observed, feels like a comfortable and low-pressure space for athletes — no one appeared to be holding back or second-guessing themselves out of fear of looking bad in front of others.", quote: null },
+        ]
+      },
+      {
+        label: "Youth-Specific Dynamics",
+        items: [
+          { title: "Handling frustration", badge: "no data", border: "gray-border", text: "This didn't come up during these sessions. Unaddressed frustration can quietly compound — a brief acknowledgment in the moment goes a long way in preventing it from affecting the rest of the session.", quote: null },
+          { title: "Praise style", badge: "good", border: "green-border", text: "Effort and process-focused — strong foundation for a mastery motivational climate. Focusing on effort and improvement rather than outcomes helps athletes develop intrinsic motivation and reduces the anxiety that comes with performance pressure.", quote: null },        ]
+      }
+    ]
+  },
+  {
+    id: "keith",
+    name: "Keith",
+    initial: "K",
+    summary: "Keith is a natural with youth athletes. His casual, warm communication style creates genuine rapport, and his instinct to reframe fear positively — combined with his awareness of disengagement — makes him a strong performer. Main growth area is proactively explaining the why behind exercises.",
+    tags: [
+      { label: "Warm with youth", type: "green" },
+      { label: "Reframes fear", type: "green" },
+      { label: "Reads disengagement", type: "green" },
+      { label: "Explain the why", type: "amber" },
+    ],
+    sections: [
+      {
+        label: "Communication & Coaching Style",
+        items: [
+          { title: "Tone of voice", badge: "good", border: "green-border", text: "Neutral and encouraging (50/50), with a casual, relatable style that works particularly well with youth athletes. Language feels authentic rather than scripted. Authenticity in coaching communication builds trust — athletes are more likely to take on feedback from a trainer they feel genuinely understood by.", quote: "Eh can you do it properly — you can do it la." },
+          { title: "Handling negativity", badge: "good", border: "green-border", text: "Consistently engages with athlete self-doubt in a warm, casual way that feels natural rather than rehearsed. Three strong examples observed across one session with Justin. Responding to self-doubt — rather than ignoring it — prevents negative internal narratives from taking hold and signals to the athlete that their feelings are heard.", quote: "Try la try, I know you still very sleepy but you can do it." },
+          { title: "Instruction delivery", badge: "good", border: "green-border", text: "One instruction at a time — athletes retain well. Delivering instructions in single steps reduces cognitive load and helps athletes stay focused on execution, which is particularly important during complex or unfamiliar exercises.", quote: null },
+        ]
+      },
+      {
+        label: "Motivation & Autonomy",
+        items: [
+          { title: "Client choice", badge: "good", border: "green-border", text: "Athletes are given choice during sessions. Offering choices — even small ones — gives athletes a sense of ownership over their training, which supports sustained motivation and engagement.", quote: null },
+          { title: "Explaining the why", badge: "note", border: "amber-border", text: "Only explains the purpose behind exercises when prompted. Given Keith's natural communication style, proactively adding the rationale could significantly strengthen athlete buy-in.", quote: null },
+          { title: "Training to avoid failure vs. training to achieve — is it spotted?", badge: "no data", border: "gray-border", text: "This didn't come up during these sessions. Keith's ability to read and respond to disengagement in real time suggests he has the instincts to spot avoidance patterns too — something to keep in mind when clients seem reluctant or flat.", quote: null },
+        ]
+      },
+      {
+        label: "Pressure & Performance States",
+        items: [
+          { title: "Regulating client emotions before a set", badge: "good", border: "green-border", text: "Two strong moments: reassured Justin before a hard set of pull-ups, and used reframing before back extensions. This instinct to reduce fear before high-effort moments is exactly right.", quote: "What's the worst that could happen — you get stronger?" },
+          { title: "Reading body language", badge: "good", border: "green-border", text: "When Justin was acting aloof and not paying attention, Keith noticed and redirected him kindly to focus on the exercise. This kind of gentle redirection respects the athlete while maintaining session quality.", quote: null },
+          { title: "Psychological safety", badge: "good", border: "green-border", text: "A strong spotlight moment: when Kimberly said \"I'm scared\" about checking her weight, Keith (alongside Dexter) reassured her and allowed her to push the weighing to next week — a great example of prioritising emotional readiness.", quote: null },
+        ]
+      },
+      {
+        label: "Youth-Specific Dynamics",
+        items: [
+          { title: "Handling frustration", badge: "no data", border: "gray-border", text: "This didn't come up during these sessions. Given Keith's natural ease with clients, this is likely a strength — his casual style lends itself well to de-escalating emotional moments without making them feel like a bigger deal than they are.", quote: null },
+          { title: "Praise style", badge: "good", border: "green-border", text: "Effort and process-focused — strong foundation for a mastery motivational climate with youth athletes. This approach rewards what athletes can control — their effort — rather than outcomes, which builds confidence and reduces performance anxiety over time.", quote: null },        ]
+      }
+    ]
+  },
+  {
+    id: "claire",
+    name: "Claire",
+    initial: "C",
+    summary: "Claire demonstrates consistent encouragement and handles negative self-talk with clear, reasoned responses. Her communication style is warm and direct. The main growth area shared with several other trainers is proactively explaining the purpose behind exercises.",
+    tags: [
+      { label: "Encouraging tone", type: "green" },
+      { label: "Reasoned reframing", type: "green" },
+      { label: "Process praise", type: "green" },
+      { label: "Explain the why", type: "amber" },
+    ],
+    sections: [
+      {
+        label: "Communication & Coaching Style",
+        items: [
+          { title: "Tone of voice", badge: "good", border: "green-border", text: "Mostly encouraging — creates a warm, positive atmosphere in sessions. Clients respond well to clear, upbeat language. A consistently encouraging tone lowers the psychological barrier to attempting difficult tasks, which is particularly valuable in a performance training setting.", quote: null },
+          { title: "Handling negativity", badge: "good", border: "green-border", text: "When Chait said \"this is harder than all the other things we did\", Claire challenged this with a clear, educational rationale — turning the complaint into a learning moment. Explaining why something is hard reframes the difficulty as purposeful rather than arbitrary, which helps clients push through resistance rather than avoiding it.", quote: "Yes, because we are isolating this muscle group by taking all the other parts out — it is supposed to be challenging." },
+          { title: "Instruction delivery", badge: "good", border: "green-border", text: "One instruction at a time — clients retain well. Keeping instructions focused reduces cognitive load, allowing clients to put their full attention into executing the movement correctly.", quote: null },
+        ]
+      },
+      {
+        label: "Motivation & Autonomy",
+        items: [
+          { title: "Client choice", badge: "good", border: "green-border", text: "Clients are given choice during sessions. Offering choice — even within a structured programme — gives clients a sense of agency that supports long-term engagement and motivation.", quote: null },
+          { title: "Explaining the why", badge: "note", border: "amber-border", text: "Only explains purpose when prompted by the client. Given how clearly Claire communicates when challenged (see above), proactively building in the rationale could be very natural for her style.", quote: null },
+          { title: "Training to avoid failure vs. training to achieve — is it spotted?", badge: "no data", border: "gray-border", text: "This didn't come up during these sessions. Being attuned to whether a client is driven by achievement or by fear of failure is useful — it shapes how challenges and setbacks are best framed in the moment.", quote: null },
+        ]
+      },
+      {
+        label: "Pressure & Performance States",
+        items: [
+          { title: "Regulating client emotions before a set", badge: "no data", border: "gray-border", text: "This didn't arise during these sessions. A brief check-in before a high-effort set — even just a word of acknowledgment — can make a real difference to a client's readiness and confidence.", quote: null },
+          { title: "Reading body language", badge: "no data", border: "gray-border", text: "This didn't come up clearly during these sessions. Non-verbal cues — posture, facial expression, fidgeting — often signal discomfort or anxiety before a client says anything. Tuning into these can allow for timely, low-key support.", quote: null },
+          { title: "Psychological safety", badge: "good", border: "green-border", text: "The gym's atmosphere came across as open and non-threatening during observations — clients engaged willingly with exercises and did not appear to be holding back out of concern for how they looked.", quote: null },
+        ]
+      },
+      {
+        label: "Youth-Specific Dynamics",
+        items: [
+          { title: "Handling frustration", badge: "no data", border: "gray-border", text: "This didn't come up during these sessions. When clients hit a frustrating moment, a calm and validating response — rather than pushing through — tends to be what gets them re-engaged.", quote: null },
+          { title: "Praise style", badge: "good", border: "green-border", text: "Effort and process-focused — the right approach for building long-term motivation and resilience.", quote: null },        ]
+      }
+    ]
+  }
+];
+
+const badgeClass = { good: "green", note: "amber", gap: "red", "no data": "gray" };
+const borderClass = { good: "green-border", note: "amber-border", gap: "red-border", "no data": "gray-border" };
+
+function buildHome() {
+  const grid = document.getElementById("trainersGrid");
+  grid.innerHTML = TRAINERS.map(t => `
+    <div class="trainer-card" onclick="showDetail('${t.id}')">
+      <div class="card-avatar">${t.initial}</div>
+      <div class="card-name">${t.name}</div>
+      <div class="card-role">Trainer</div>
+      <div class="card-arrow">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </div>
+    </div>
+  `).join("");
+}
+
+function showDetail(id) {
+  const t = TRAINERS.find(x => x.id === id);
+  if (!t) return;
+
+  document.getElementById("detailAvatar").textContent = t.initial;
+  document.getElementById("detailName").textContent = t.name;
+
+  const body = document.getElementById("detailBody");
+  body.innerHTML = `
+    <div class="summary-box">
+      <div class="summary-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+        </svg>
+      </div>
+      <div class="summary-text">
+        <p>Observation Summary</p>
+        <p>${t.summary}</p>
+      </div>
+    </div>
+
+    <div class="score-row">
+      <span style="font-size:0.75rem;font-weight:600;color:var(--teal-mid);margin-right:0.5rem;text-transform:uppercase;letter-spacing:0.06em;">Key</span>
+      <span class="score-item"><span class="score-dot" style="background:var(--teal)"></span>Good</span>
+      <span class="score-item"><span class="score-dot" style="background:#D97706"></span>Note</span>
+      <span class="score-item"><span class="score-dot" style="background:#B91C1C"></span>Gap</span>
+      <span class="score-item"><span class="score-dot" style="background:#ccc"></span>No data</span>
+    </div>
+
+    ${t.sections.map(sec => `
+      <div class="section-label">${sec.label}</div>
+      ${sec.items.map(item => `
+        <div class="obs-card ${borderClass[item.badge] || "gray-border"}">
+          <div class="obs-header">
+            <div class="obs-title">${item.title}</div>
+            <span class="obs-badge ${badgeClass[item.badge] || "gray"}">${item.badge}</span>
+          </div>
+          <div class="obs-text">${item.text}</div>
+          ${item.quote ? `<div class="obs-quote">${item.quote}</div>` : ""}
+          ${item.quote2 ? `<div class="obs-quote">${item.quote2}</div>` : ""}
+        </div>
+      `).join("")}
+    `).join("")}
+
+    <footer>Sports Performance Hub &nbsp;·&nbsp; Psychological Climate Review &nbsp;·&nbsp; Confidential</footer>
+  `;
+
+  document.getElementById("homePage").classList.remove("active");
+  document.getElementById("detailPage").classList.add("active");
+  document.getElementById("navBack").classList.add("visible");
+  window.scrollTo(0, 0);
+}
+
+function showHome() {
+  document.getElementById("detailPage").classList.remove("active");
+  document.getElementById("homePage").classList.add("active");
+  document.getElementById("navBack").classList.remove("visible");
+  window.scrollTo(0, 0);
+}
+
+buildHome();
+</script>
+</body>
+</html>
