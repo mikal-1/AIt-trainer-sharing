@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trainer Feedback — Sports Performance Hub</title>
+<title>Trainer Feedback — ATHLETIC INC</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -112,14 +112,7 @@
   .trainer-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(6,61,47,0.12); border-color: var(--teal); }
   .trainer-card:hover::before { transform: scaleX(1); }
 
-  .card-avatar {
-    width: 52px; height: 52px; border-radius: 50%;
-    background: var(--teal-pale);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Playfair Display', serif; font-size: 1.3rem;
-    color: var(--teal-mid); font-weight: 700;
-    margin-bottom: 1rem;
-  }
+
   .card-name {
     font-family: 'Playfair Display', serif;
     font-size: 1.25rem; font-weight: 700; color: var(--teal-dark);
@@ -127,7 +120,7 @@
   }
   .card-role {
     font-size: 0.8rem; color: var(--muted); font-weight: 400;
-    letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 1.25rem;
+    letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 1.25rem; margin-top: 0;
   }
 
 
@@ -151,17 +144,9 @@
   }
   .detail-hero-inner {
     max-width: 760px; margin: 0 auto;
-    display: flex; align-items: flex-start; gap: 1.5rem;
     position: relative;
   }
-  .detail-avatar {
-    width: 64px; height: 64px; border-radius: 50%; flex-shrink: 0;
-    background: rgba(29,158,117,0.25);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Playfair Display', serif;
-    font-size: 1.6rem; color: var(--teal-light); font-weight: 700;
-    border: 2px solid rgba(159,225,203,0.3);
-  }
+
   .detail-hero-text h2 {
     font-family: 'Playfair Display', serif;
     font-size: 1.9rem; font-weight: 700; color: var(--white);
@@ -266,7 +251,7 @@
 <body>
 
 <nav>
-  <span class="nav-logo">Sports Performance Hub</span>
+  <span class="nav-logo">ATHLETIC INC</span>
   <button class="nav-back" id="navBack" onclick="showHome()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M19 12H5M12 5l-7 7 7 7"/>
@@ -282,17 +267,16 @@
     <p>Sports Psychology Observation Report &nbsp;·&nbsp; Internal Team Sharing</p>
   </div>
   <div class="trainers-grid" id="trainersGrid"></div>
-  <footer>Sports Performance Hub &nbsp;·&nbsp; Psychological Climate Review &nbsp;·&nbsp; Confidential</footer>
+  <footer>ATHLETIC INC &nbsp;·&nbsp; Psychological Climate Review &nbsp;·&nbsp; Confidential</footer>
 </div>
 
 <!-- DETAIL PAGE -->
 <div class="page" id="detailPage">
   <div class="detail-hero">
     <div class="detail-hero-inner">
-      <div class="detail-avatar" id="detailAvatar"></div>
       <div class="detail-hero-text">
         <h2 id="detailName"></h2>
-        <p>Trainer &nbsp;·&nbsp; Sports Performance Hub</p>
+        <p>Trainer &nbsp;·&nbsp; ATHLETIC INC</p>
       </div>
     </div>
   </div>
@@ -377,7 +361,7 @@ const TRAINERS = [
         label: "Pressure & Performance States",
         items: [
           { title: "Regulating client emotions before a set", badge: "no data", border: "gray-border", text: "This didn't arise during these sessions. Pre-set emotional regulation is an important skill — helping athletes settle before hard effort sets can meaningfully improve both performance quality and their confidence in tackling difficult tasks.", quote: null },
-          { title: "Reading body language", badge: "good", border: "green-border", text: "Exemplary — noticed Debbie's discomfort mid-exercise and stopped to adjust the session. This kind of real-time attunement is a mark of strong psychological awareness in a trainer.", quote: null },
+          { title: "Reading body language", badge: "good", border: "green-border", text: "Exemplary across both sessions observed. Noticed Debbie's discomfort mid-exercise and stopped to adjust immediately. In a later session, when Gabriel was slacking off, Dexter caught it and delivered a friendly but energising redirect — clapping and calling him out in a way that felt encouraging rather than critical. Staying attuned to how clients are showing up, not just whether they're completing the work, is a genuine strength here.", quote: "You're a rugby player! Show me some fire, don't be so loose." },
           { title: "Psychological safety", badge: "good", border: "green-border", text: "Environment feels safe. Notable spotlight: when Kimberly said she was scared to check her weight, Dexter (alongside Keith) reassured her and allowed her to push the weighing to next week — prioritising emotional readiness over routine.", quote: null },
         ]
       },
@@ -421,7 +405,7 @@ const TRAINERS = [
         label: "Pressure & Performance States",
         items: [
           { title: "Regulating client emotions before a set", badge: "good", border: "green-border", text: "Gave Greg extra time before a set — \"you can go when you're ready.\" Giving a client the space to self-regulate before a set — rather than pushing them to go on the trainer's timeline — reduces performance anxiety and builds a sense of control.", quote: "You can go when you're ready." },
-          { title: "Reading body language", badge: "gap", border: "red-border", text: "Rhea was observed fidgeting anxiously with her fingers during the session — this non-verbal cue went unnoticed. Tuning into subtle anxiety signals can open the door to a quick check-in that makes a real difference.", quote: null },
+          { title: "Reading body language", badge: "gap", border: "red-border", text: "Two missed cues observed. Rhea was fidgeting anxiously with her fingers during the session — this went unnoticed. In a separate moment, Faith was visibly looking with curiosity at the Pilates Reformer — an expression of interest that could have been a natural opening to engage, explain the equipment, or invite a question. Reading positive body language — not just signs of distress — is also part of staying connected to where a client's head is at.", quote: null },
           { title: "Psychological safety", badge: "good", border: "green-border", text: "Based on observation, athletes in the gym appear to feel at ease — there was no sense of athletes shying away from attempts or masking discomfort out of embarrassment. The space feels welcoming overall.", quote: null },
         ]
       },
@@ -508,7 +492,7 @@ const TRAINERS = [
       {
         label: "Pressure & Performance States",
         items: [
-          { title: "Regulating client emotions before a set", badge: "good", border: "green-border", text: "Two strong moments: reassured Justin before a hard set of pull-ups, and used reframing before back extensions. This instinct to reduce fear before high-effort moments is exactly right.", quote: "What's the worst that could happen — you get stronger?" },
+          { title: "Regulating client emotions before a set", badge: "good", border: "green-border", text: "Consistently strong in this area. Reassured Justin before a hard pull-up set and used positive reframing before back extensions. Also checked in with Kai Ze after introducing a new exercise — a simple but important habit that helps clients feel safe to flag discomfort early rather than pushing through silently.", quote2: "Does that feel okay?", quote: "What's the worst that could happen — you get stronger?" },
           { title: "Reading body language", badge: "good", border: "green-border", text: "When Justin was acting aloof and not paying attention, Keith noticed and redirected him kindly to focus on the exercise. This kind of gentle redirection respects the athlete while maintaining session quality.", quote: null },
           { title: "Psychological safety", badge: "good", border: "green-border", text: "A strong spotlight moment: when Kimberly said \"I'm scared\" about checking her weight, Keith (alongside Dexter) reassured her and allowed her to push the weighing to next week — a great example of prioritising emotional readiness.", quote: null },
         ]
@@ -574,7 +558,6 @@ function buildHome() {
   const grid = document.getElementById("trainersGrid");
   grid.innerHTML = TRAINERS.map(t => `
     <div class="trainer-card" onclick="showDetail('${t.id}')">
-      <div class="card-avatar">${t.initial}</div>
       <div class="card-name">${t.name}</div>
       <div class="card-role">Trainer</div>
       <div class="card-arrow">
@@ -590,7 +573,6 @@ function showDetail(id) {
   const t = TRAINERS.find(x => x.id === id);
   if (!t) return;
 
-  document.getElementById("detailAvatar").textContent = t.initial;
   document.getElementById("detailName").textContent = t.name;
 
   const body = document.getElementById("detailBody");
@@ -630,7 +612,7 @@ function showDetail(id) {
       `).join("")}
     `).join("")}
 
-    <footer>Sports Performance Hub &nbsp;·&nbsp; Psychological Climate Review &nbsp;·&nbsp; Confidential</footer>
+    <footer>ATHLETIC INC &nbsp;·&nbsp; Psychological Climate Review &nbsp;·&nbsp; Confidential</footer>
   `;
 
   document.getElementById("homePage").classList.remove("active");
